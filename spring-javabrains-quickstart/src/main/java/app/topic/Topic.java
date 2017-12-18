@@ -37,4 +37,19 @@ public class Topic {
     public void setDescription(String description) {
         this.description = description;
     }
+
+/*    public boolean equals(Object o) {
+        boolean isEqual = false;
+        if(o instanceof Topic) {
+            Topic topic = (Topic) o;
+            if(topic.getId().equals(this.id)){
+                isEqual=  true;
+            }
+        }
+        return isEqual;
+    }
+
+    public int hashCode() {
+        return id.
+    }*/
 }
