@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.SpringVersion;
 
 import java.util.Arrays;
 
@@ -20,6 +21,7 @@ public class SpringmvcRestHateoasJpaApplication {
 
     @Bean
     CommandLineRunner init(AccountRepository accountRepository, BookmarkRepository bookmarkRepository) {
+        System.out.println("Spring Version: " + SpringVersion.getVersion());
         return (evt) -> Arrays.asList(
                 "jhoeller,dsyer,pwebb,ogierke,rwinch,mfisher,mpollack,jlong".split(","))
                 .forEach(
