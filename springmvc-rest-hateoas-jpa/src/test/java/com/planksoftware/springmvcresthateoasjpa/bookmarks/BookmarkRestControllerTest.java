@@ -112,6 +112,17 @@ public class BookmarkRestControllerTest {
 
     }
 
+    @Test
+    public void createBookmark() throws Exception {
+        String bookmarkJson = json(new Bookmark(this.account, "http://spring.io", "spring website"));
+
+        mockMvc.perform(post("/" + userName + "/bookmarks")
+                .contentType(contentType)
+                .content(bookmarkJson))
+                .andExpect(status().isCreated());
+
+    }
+
 
 
     protected String json(Object obj) throws IOException {
