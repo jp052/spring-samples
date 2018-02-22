@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.simple;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;

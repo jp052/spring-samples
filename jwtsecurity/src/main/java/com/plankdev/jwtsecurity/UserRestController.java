@@ -1,52 +1,42 @@
 package com.plankdev.jwtsecurity;
 
+import com.plankdev.jwtsecurity.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
+import java.security.Principal;
+import java.util.List;
 
-@RequestMapping("/users")
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @RestController
+@RequestMapping( value = "/api", produces = MediaType.APPLICATION_JSON_VALUE )
 public class UserRestController {
 
-    UserRepository userRepository;
-
     @Autowired
-    public UserRestController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private UserService userService;
+
+    @RequestMapping( method = GET, value = "/user/{userId}" )
+    @PreAuthorize("hasRole('ADMIN')")
+    public User loadById(@PathVariable Long userId ) {
+        return this.userService.findById( userId );
     }
 
-    @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        User createdUser = userRepository.save(new User(user.getName(), user.getPassword(), 1));
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(createdUser.getId()).toUri();
-
-        ResponseEntity response = ResponseEntity.created(location).build();
-
-        return response;
+    @RequestMapping( method = GET, value= "/user/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<User> loadAll() {
+        return this.userService.findAll();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginCustomer(
-            @RequestParam(value = "username") String username,
-            @RequestParam(value = "password") String password
-    ) {
-        throw new NotImplementedException();
-    }
 
-    @PutMapping("/{userId}/upgrade")
-    public ResponseEntity<?> upgradeUser(@RequestBody User user) {
-        //get user by id
-        //trigger payment
-        //if successful contiue otherwise abort
-        //change userType to 2
 
-        throw new NotImplementedException();
+    @RequestMapping( method = GET, value= "/whoami")
+    @PreAuthorize("hasRole('USER')")
+    public User user(Principal user) {
+        return this.userService.findByUsername(user.getName());
     }
 }

@@ -1,0 +1,8 @@
+app:
+  name: jwtsecurity
+
+jwt:
+  header: Authorization
+  expires_in: 946080000 # 30 years in seconds
+  secret: HBd59Mb3KqbkKHkbCEHJoZ2UKPGmh03J
+

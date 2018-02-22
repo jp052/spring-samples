@@ -5,76 +5,71 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JwtsecurityApplication.class)
-@WebAppConfiguration
+@SpringBootTest
+@WebAppConfiguration //FIXME: is @WebAppConfiguration needed?
 public class UserRestControllerTest {
 
-    private MockMvc mockMvc;
-
-    private HttpMessageConverter mappingJackson2HttpMessageConverter;
-
-    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
+    private MockMvc mvc;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
-        this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream()
-                .filter(converter -> converter instanceof MappingJackson2HttpMessageConverter)
-                .findAny()
-                .orElse(null);
-
-        //TODO: check if best assert
-        assertNotNull("the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
-    }
+    private WebApplicationContext context;
 
     @Before
-    public void setup() throws Exception {
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
-
+    public void setup() {
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
     }
-
 
     @Test
-    public void createUserWorks() throws Exception {
-        //assemble
-        String userJson = json(new User("jan", "1234", 1));
+    @WithAnonymousUser
+    public void shouldGetUnauthorizedWithoutRole() throws Exception {
 
-        //action
-        ResultActions resultActions = mockMvc.perform(post("/users")
-                .contentType(contentType)
-                .content(userJson));
-
-        //assert
-        resultActions.andExpect(status().isCreated());
+        this.mvc.perform(get("/user"))
+                .andExpect(status().isUnauthorized());
     }
 
-    private String json(Object obj) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        this.mappingJackson2HttpMessageConverter.write(obj, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
+    @Test
+    @WithMockUser(roles = "USER")
+    public void getPersonsSuccessfullyWithUserRole() throws Exception {
+        ResultActions perform = this.mvc.perform(get("/api/whoami"));
+        perform.andExpect(status().is2xxSuccessful());
     }
+
+    @Test
+    @WithAnonymousUser
+    public void getPersonsFailWithAnonymousUser() throws Exception {
+        this.mvc.perform(get("/api/whoami"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void getAllUserSuccessWithAdminRole() throws Exception {
+        this.mvc.perform(get("/api/user/all"))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void getAllUserFailWithUserRole() throws Exception {
+        this.mvc.perform(get("/api/user/all"))
+                .andExpect(status().is4xxClientError());
+    }
+
 }

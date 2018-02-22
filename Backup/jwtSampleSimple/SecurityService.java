@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.simple;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;

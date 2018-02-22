@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.simple;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
