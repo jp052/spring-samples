@@ -22,38 +22,43 @@ public class JwtsecurityApplication {
     CommandLineRunner init(UserRepository userRepository, AuthorityRespository authorityRespository) {
         System.out.println("Spring Version: " + SpringVersion.getVersion());
         return (evt) -> {
-            //Create user and Admin authority
-            //create admin user with admin authority
-            //create user with user authority
+
+
+            User user = new User("Someone", new BCryptPasswordEncoder().encode("password"));
+            user.setEnabled(true);
+            User admin = new User("Admin", new BCryptPasswordEncoder().encode("password"));
+            admin.setEnabled(true);
+
+            Authority userAuthority = new Authority("USER");
+            Authority adminAuthority = new Authority("ADMIN");
+
+
+            User savedUser = userRepository.save(user);
+            User savedAdmin = userRepository.save(admin);
+
+            Authority savedUserAuth = authorityRespository.save(userAuthority);
+            Authority savedAdminAuth = authorityRespository.save(adminAuthority);
+
+            savedUserAuth.addUser(savedUser);
+            savedAdminAuth.addUser(savedAdmin);
+            savedUserAuth.addUser(savedAdmin);
+
+            userRepository.save(savedUser);
+            userRepository.save(savedAdmin);
 
 
 
-            /*for (Authority authority : form.getAuthorities()) {
+
+
+            /*Just sample code:
+            for (Authority authority : form.getAuthorities()) {
                 Authority _authority = authorityRepository.findByAuthority(authority.getAuthority());
                 saved.getAuthorities().add(_authority);
             }
 
             Authentication auth =
                     new UsernamePasswordAuthenticationToken(saved, saved.getPassword(), saved.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
-            User user = userRepository.save(new User("Someone", new BCryptPasswordEncoder().encode("password")));
-            User admin = userRepository.save(new User("Admin", new BCryptPasswordEncoder().encode("password")));
-
-            Authority userAuthority = authorityRespository.save(new Authority("USER"));
-
-            user.getAuthorities().add()
-
-
-            Authority adminAuthority = new Authority("ADMIN");
-            Authority userAuthority = new Authority("USER");
-            authorityRespository.save(adminAuthority);
-            authorityRespository.save(userAuthority);
-
-
-
-            userRepository.save(admin);
-            userRepository.save(user);*/
+            SecurityContextHolder.getContext().setAuthentication(auth);*/
 
         };
     }

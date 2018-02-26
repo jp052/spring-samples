@@ -60,10 +60,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();*/
 
        //Dev config:
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+       /* http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
                 .authorizeRequests().antMatchers("/").permitAll().and()
-                .authorizeRequests().antMatchers("/console/**").permitAll();
+                .authorizeRequests().antMatchers("/console/**").permitAll();*/
+
+        http.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS ).and()
+                .exceptionHandling().authenticationEntryPoint( restAuthenticationEntryPoint ).and()
+                .authorizeRequests()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/console/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .anyRequest().authenticated().and()
+                .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, jwtUserDetailsService), BasicAuthenticationFilter.class);
+
 
         http.csrf().disable();
         http.headers().frameOptions().disable();
@@ -75,12 +85,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // TokenAuthenticationFilter will ignore the below paths
         web.ignoring().antMatchers(
                 HttpMethod.POST,
-                "/auth/login"
+                "/auth/login", "/console/**", "/h2-console/**"
         );
         web.ignoring().antMatchers(
                 HttpMethod.GET,
-                "/h2-console",
-                "/h2-console/*", //fixme: remove for prod, figure out prod config
+                "/h2-console/**",
+                "/console/**", //fixme: remove for prod, figure out prod config
                 "/",
                 "/webjars/**",
                 "/*.html",

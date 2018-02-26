@@ -1,13 +1,22 @@
 package com.plankdev.jwtsecurity.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 public class Authority implements GrantedAuthority {
+
+
+    private static final Log LOGGER = LogFactory.getLog(Authority.class);
 
     @Id
     @GeneratedValue
@@ -25,8 +34,8 @@ public class Authority implements GrantedAuthority {
     }
 
     //inverse/child side of relation
-    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
-    private List<User> users;
+    @ManyToMany(mappedBy = "authorities")
+    private List<User> users = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -45,13 +54,34 @@ public class Authority implements GrantedAuthority {
     }
 
     public void addUser(User user) {
-       /* users.add( user );
-        GrantedAuthority thisAuthority = (GrantedAuthority) this;
-        user.getAuthorities().add(thisAuthority);*/
+        if (!users.contains(user)) {
+            users.add(user);
+        } else {
+            LOGGER.info("user: " + user.getUsername() + "already exists in authority: " + this.name);
+        }
+
+        Collection<? extends GrantedAuthority> existingAuthorities = user.getAuthorities();
+        if (!existingAuthorities.contains(this)) {
+            List<Authority> authoritiesToAdd = new ArrayList<>();
+
+            //cast existing GrantedAuthorities to Authority
+            for (GrantedAuthority authority : existingAuthorities) {
+                if (authority instanceof Authority) {
+                    authoritiesToAdd.add((Authority) authority);
+                }
+            }
+
+            authoritiesToAdd.add(this);
+            user.setAuthorities(authoritiesToAdd);
+        } else {
+            LOGGER.info("authority: " + this.name + "already exists in user: " + user.getUsername());
+        }
+
     }
 
     public void removeUser(User use) {
-        /*addresses.remove( address );
+        /*FIXME:
+        addresses.remove( address );
         address.getOwners().remove( this );*/
     }
 

@@ -6,9 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
+//TODO: implement equals and hascode and use library
 @Entity
 public class User implements UserDetails {
     @Id
@@ -33,9 +36,11 @@ public class User implements UserDetails {
     private Timestamp lastPasswordResetDate;
 
     //owing/parent side of relation
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Authority> authorities;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private List<Authority> authorities = new ArrayList<>();
 
+    public User() {
+    }
 
     public User(String username, String password) {
         this.username = username;
