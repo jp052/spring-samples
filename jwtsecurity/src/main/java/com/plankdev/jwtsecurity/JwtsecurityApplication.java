@@ -29,8 +29,8 @@ public class JwtsecurityApplication {
             User admin = new User("Admin", new BCryptPasswordEncoder().encode("password"));
             admin.setEnabled(true);
 
-            Authority userAuthority = new Authority("USER");
-            Authority adminAuthority = new Authority("ADMIN");
+            Authority userAuthority = new Authority("ROLE_USER");
+            Authority adminAuthority = new Authority("ROLE_ADMIN");
 
 
             User savedUser = userRepository.save(user);

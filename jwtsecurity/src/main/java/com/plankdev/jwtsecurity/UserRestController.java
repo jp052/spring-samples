@@ -32,8 +32,6 @@ public class UserRestController {
         return this.userService.findAll();
     }
 
-
-
     @RequestMapping( method = GET, value= "/whoami")
     @PreAuthorize("hasRole('USER')")
     public User user(Principal user) {
