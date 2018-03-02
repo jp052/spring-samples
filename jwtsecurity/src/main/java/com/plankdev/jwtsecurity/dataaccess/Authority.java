@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity.model;
+package com.plankdev.jwtsecurity.dataaccess;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,8 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Entity
 public class Authority implements GrantedAuthority {

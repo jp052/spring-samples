@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.springsecurity;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,11 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class TokenBasedAuthentication extends AbstractAuthenticationToken {
     private String token;
-    private final UserDetails principle;
+    private final UserDetails userDetails;
 
-    public TokenBasedAuthentication( UserDetails principle ) {
-        super( principle.getAuthorities() );
-        this.principle = principle;
+    public TokenBasedAuthentication( UserDetails userDetails) {
+        super( userDetails.getAuthorities() );
+        this.userDetails = userDetails;
     }
 
     public String getToken() {
@@ -33,6 +33,6 @@ public class TokenBasedAuthentication extends AbstractAuthenticationToken {
 
     @Override
     public UserDetails getPrincipal() {
-        return principle;
+        return userDetails;
     }
 }

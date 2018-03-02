@@ -1,6 +1,7 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.springsecurity;
 
-import com.plankdev.jwtsecurity.model.User;
+import com.plankdev.jwtsecurity.dataaccess.User;
+import com.plankdev.jwtsecurity.dataaccess.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

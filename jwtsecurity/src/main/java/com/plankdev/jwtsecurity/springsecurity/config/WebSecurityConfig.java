@@ -1,5 +1,9 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.springsecurity.config;
 
+import com.plankdev.jwtsecurity.jwt.TokenHelper;
+import com.plankdev.jwtsecurity.springsecurity.CustomUserDetailsService;
+import com.plankdev.jwtsecurity.springsecurity.RestAuthenticationEntryPoint;
+import com.plankdev.jwtsecurity.springsecurity.TokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity

@@ -1,5 +1,6 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.springsecurity;
 
+import com.plankdev.jwtsecurity.jwt.TokenHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,10 +37,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String authToken = tokenHelper.getToken(request);
 
         if (authToken != null) {
-            // get username from token
             username = tokenHelper.getUsernameFromToken(authToken);
             if (username != null) {
-                // get user
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (tokenHelper.validateToken(authToken, userDetails)) {
                     // create authentication

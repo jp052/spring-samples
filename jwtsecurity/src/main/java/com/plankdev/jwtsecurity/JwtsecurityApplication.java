@@ -1,15 +1,15 @@
 package com.plankdev.jwtsecurity;
 
-import com.plankdev.jwtsecurity.model.Authority;
-import com.plankdev.jwtsecurity.model.User;
+import com.plankdev.jwtsecurity.dataaccess.Authority;
+import com.plankdev.jwtsecurity.dataaccess.User;
+import com.plankdev.jwtsecurity.dataaccess.AuthorityRespository;
+import com.plankdev.jwtsecurity.dataaccess.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.SpringVersion;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.Arrays;
 
 @SpringBootApplication
 public class JwtsecurityApplication {
@@ -24,9 +24,9 @@ public class JwtsecurityApplication {
         return (evt) -> {
 
 
-            User user = new User("Someone", new BCryptPasswordEncoder().encode("password"));
+            User user = new User("user", new BCryptPasswordEncoder().encode("password"));
             user.setEnabled(true);
-            User admin = new User("Admin", new BCryptPasswordEncoder().encode("password"));
+            User admin = new User("admin", new BCryptPasswordEncoder().encode("password"));
             admin.setEnabled(true);
 
             Authority userAuthority = new Authority("ROLE_USER");

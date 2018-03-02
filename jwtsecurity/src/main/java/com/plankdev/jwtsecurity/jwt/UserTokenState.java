@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.jwt;
 
 public class UserTokenState {
     private String access_token;

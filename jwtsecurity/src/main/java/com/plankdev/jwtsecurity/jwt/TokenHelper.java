@@ -1,6 +1,6 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.jwt;
 
-import com.plankdev.jwtsecurity.model.User;
+import com.plankdev.jwtsecurity.dataaccess.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

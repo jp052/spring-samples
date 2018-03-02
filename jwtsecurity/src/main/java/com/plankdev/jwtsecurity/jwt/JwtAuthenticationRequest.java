@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.jwt;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ public class JwtAuthenticationRequest implements Serializable {
     private String password;
 
     public JwtAuthenticationRequest() {
-        //Fixme: does super() make any sense here?
+        //Fixme: does super() make any sense here, it just calls object?
         super();
     }
 

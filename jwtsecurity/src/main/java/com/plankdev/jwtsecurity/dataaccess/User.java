@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity.model;
+package com.plankdev.jwtsecurity.dataaccess;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;

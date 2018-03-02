@@ -1,6 +1,5 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.dataaccess;
 
-import com.plankdev.jwtsecurity.model.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthorityRespository extends JpaRepository<Authority, Long>{

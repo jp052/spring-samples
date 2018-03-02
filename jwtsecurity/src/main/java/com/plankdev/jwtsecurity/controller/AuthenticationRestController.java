@@ -1,6 +1,10 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.controller;
 
-import com.plankdev.jwtsecurity.model.User;
+import com.plankdev.jwtsecurity.springsecurity.CustomUserDetailsService;
+import com.plankdev.jwtsecurity.jwt.JwtAuthenticationRequest;
+import com.plankdev.jwtsecurity.jwt.TokenHelper;
+import com.plankdev.jwtsecurity.jwt.UserTokenState;
+import com.plankdev.jwtsecurity.dataaccess.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

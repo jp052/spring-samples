@@ -1,12 +1,12 @@
-package com.plankdev.jwtsecurity;
+package com.plankdev.jwtsecurity.dataaccess;
 
-import com.plankdev.jwtsecurity.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,5 +27,10 @@ public class UserService {
     public List<User> findAll() throws AccessDeniedException {
         List<User> result = userRepository.findAll();
         return result;
+    }
+
+    public Optional<User> createUser(User user) {
+        Optional<User> createdUser = Optional.ofNullable(userRepository.save(user));
+        return createdUser;
     }
 }
