@@ -14,8 +14,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
 @RestController
 @RequestMapping( value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE )
 public class UserRestController {
@@ -23,47 +21,16 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    /*
-	@RequestMapping(method = RequestMethod.POST)
-	ResponseEntity<?> add(@PathVariable String userId, @RequestBody Bookmark input) {
-		this.validateUser(userId);
-
-		return this.accountRepository
-				.findByUsername(userId)
-				.map(account -> {
-					Bookmark result = bookmarkRepository.save(new Bookmark(account,
-							input.getUri(), input.getDescription()));
-
-					URI location = ServletUriComponentsBuilder
-						.fromCurrentRequest().path("/{id}")
-						.buildAndExpand(result.getId()).toUri();
-
-					return ResponseEntity.created(location).build();
-				})
-				.orElse(ResponseEntity.noContent().build());
-
-	}
-     */
-
-    //# createUser
+    //# create user
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
         Optional<User> createUserOpt = userService.createUser(user);
-        ResponseEntity<?> response;
-
-        if(createUserOpt.isPresent()) {
-            User createUser = createUserOpt.get();
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("userId")
-                    .buildAndExpand(createUser.getId()).toUri();
-            response = ResponseEntity.created(location).build();
-        } else {
-            response = ResponseEntity.noContent().build();
-        }
+        ResponseEntity<?> response = buildUserResponseEntity(createUserOpt);
 
         return response;
     }
 
+    //# read user
     @GetMapping(value = "/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public User readUser(@PathVariable Long userId ) {
@@ -71,22 +38,57 @@ public class UserRestController {
     }
 
 
-    //updateUser
+    //# update user
+    @PutMapping(value = "/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User user) {
+        if(user.getId() == null || user.getId() != userId) {
+            throw new IllegalStateException("PathVariable and RequestBody id needs to be set and same value");
+        }
+        Optional<User> updatedUserOpt = userService.updateUser(user);
+        ResponseEntity<?> response = buildUserResponseEntity(updatedUserOpt);
 
-    //deleteUser
+        return response;
+    }
 
+    //# delete user
+    @DeleteMapping(value = "/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
 
+        return ResponseEntity.noContent().build();
+    }
+
+    //# list users
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<User> listUsers() {
         return this.userService.findAll();
     }
 
+    //# whoami
     //how to implemten this properly using Resful routes? Separate resource calls StatisticsController?
     @GetMapping(value= "/whoami")
     @PreAuthorize("hasRole('USER')")
     public User whoami(Principal principal) {
         User user = userService.findByUsername(principal.getName());
         return user;
+    }
+
+    private ResponseEntity<?> buildUserResponseEntity(Optional<User> createUserOpt) {
+        ResponseEntity<?> response;
+
+
+        if(createUserOpt.isPresent()) {
+            User createUser = createUserOpt.get();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(createUser.getId()).toUri();
+            response = ResponseEntity.created(location).body(createUser);
+        } else {
+            response = ResponseEntity.noContent().build();
+        }
+        return response;
     }
 }
