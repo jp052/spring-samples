@@ -40,6 +40,9 @@ public class User implements UserDetails {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<Authority> authorities = new ArrayList<>();
 
+    @OneToMany
+    private List<Application> applications = new ArrayList<>();
+
     public User() {
     }
 

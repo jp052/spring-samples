@@ -1,7 +1,6 @@
 package com.plankdev.jwtsecurity;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.plankdev.jwtsecurity.dataaccess.Application;
 import com.plankdev.jwtsecurity.dataaccess.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -111,7 +110,7 @@ public class UserRestControllerTest {
                 .andReturn();
         String userJsonAsString = getUserResult.getResponse().getContentAsString();
 
-        User user = JsonUtils.jsonStringToModel(userJsonAsString, User.class);
+        User user = JsonUtils.jsonStringToPojo(userJsonAsString, User.class);
         user.setFirstName("firstName");
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/1")
@@ -174,7 +173,7 @@ public class UserRestControllerTest {
                 .andReturn();
 
         String userJsonAsString = createUserResutl.getResponse().getContentAsString();
-        return JsonUtils.jsonStringToModel(userJsonAsString, User.class);
+        return JsonUtils.jsonStringToPojo(userJsonAsString, User.class);
     }
 
     /**

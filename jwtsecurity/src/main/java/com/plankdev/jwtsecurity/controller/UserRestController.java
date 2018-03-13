@@ -79,7 +79,6 @@ public class UserRestController {
     private ResponseEntity<?> buildUserResponseEntity(Optional<User> createUserOpt) {
         ResponseEntity<?> response;
 
-
         if(createUserOpt.isPresent()) {
             User createUser = createUserOpt.get();
             URI location = ServletUriComponentsBuilder
