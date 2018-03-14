@@ -1,7 +1,7 @@
 package com.plankdev.jwtsecurity.controller;
 
+import com.plankdev.jwtsecurity.dataaccess.AppUser;
 import com.plankdev.jwtsecurity.dataaccess.UserService;
-import com.plankdev.jwtsecurity.dataaccess.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +21,10 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    //# create user
+    //# create appUser
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        Optional<User> createUserOpt = userService.createUser(user);
+    public ResponseEntity<?> createUser(@RequestBody AppUser appUser) {
+        Optional<AppUser> createUserOpt = userService.createUser(appUser);
         ResponseEntity<?> response = buildUserResponseEntity(createUserOpt);
 
         return response;
@@ -33,19 +33,19 @@ public class UserRestController {
     //# read user
     @GetMapping(value = "/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public User readUser(@PathVariable Long userId ) {
+    public AppUser readUser(@PathVariable Long userId ) {
         return this.userService.findById( userId );
     }
 
 
-    //# update user
+    //# update appUser
     @PutMapping(value = "/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User user) {
-        if(user.getId() == null || user.getId() != userId) {
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody AppUser appUser) {
+        if(appUser.getId() == null || appUser.getId() != userId) {
             throw new IllegalStateException("PathVariable and RequestBody id needs to be set and same value");
         }
-        Optional<User> updatedUserOpt = userService.updateUser(user);
+        Optional<AppUser> updatedUserOpt = userService.updateUser(appUser);
         ResponseEntity<?> response = buildUserResponseEntity(updatedUserOpt);
 
         return response;
@@ -63,7 +63,7 @@ public class UserRestController {
     //# list users
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<User> listUsers() {
+    public List<AppUser> listUsers() {
         return this.userService.findAll();
     }
 
@@ -71,20 +71,20 @@ public class UserRestController {
     //how to implemten this properly using Resful routes? Separate resource calls StatisticsController?
     @GetMapping(value= "/whoami")
     @PreAuthorize("hasRole('USER')")
-    public User whoami(Principal principal) {
-        User user = userService.findByUsername(principal.getName());
-        return user;
+    public AppUser whoami(Principal principal) {
+        AppUser appUser = userService.findByUsername(principal.getName());
+        return appUser;
     }
 
-    private ResponseEntity<?> buildUserResponseEntity(Optional<User> createUserOpt) {
+    private ResponseEntity<?> buildUserResponseEntity(Optional<AppUser> createUserOpt) {
         ResponseEntity<?> response;
 
         if(createUserOpt.isPresent()) {
-            User createUser = createUserOpt.get();
+            AppUser createAppUser = createUserOpt.get();
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{id}")
-                    .buildAndExpand(createUser.getId()).toUri();
-            response = ResponseEntity.created(location).body(createUser);
+                    .buildAndExpand(createAppUser.getId()).toUri();
+            response = ResponseEntity.created(location).body(createAppUser);
         } else {
             response = ResponseEntity.noContent().build();
         }

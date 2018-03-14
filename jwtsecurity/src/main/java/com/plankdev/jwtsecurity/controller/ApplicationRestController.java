@@ -2,6 +2,7 @@ package com.plankdev.jwtsecurity.controller;
 
 import com.plankdev.jwtsecurity.dataaccess.Application;
 import com.plankdev.jwtsecurity.dataaccess.ApplicationService;
+import com.plankdev.jwtsecurity.jwt.TokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +27,17 @@ public class ApplicationRestController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createApplication(@PathVariable Long userId, @RequestBody Application application) {
         Optional<Application> createdApplicationOpt = applicationService.createApplication(application);
-        ResponseEntity<?> response = buildUserResponseEntity(createdApplicationOpt);
+        ResponseEntity<?> response = buildApplicationResponseEntity(createdApplicationOpt);
         return response;
     }
 
-    private ResponseEntity<?> buildUserResponseEntity(Optional<Application> createApplicationOpt) {
+    private ResponseEntity<?> buildApplicationResponseEntity(Optional<Application> createApplicationOpt) {
         ResponseEntity<?> response;
 
         if(createApplicationOpt.isPresent()) {
             Application createApplication = createApplicationOpt.get();
             URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{id}")
+                    .fromCurrentRequest().path("/{id}") //FIXME: adds double id for update, needs fix.
                     .buildAndExpand(createApplication.getId()).toUri();
             response = ResponseEntity.created(location).body(createApplication);
         } else {

@@ -1,6 +1,6 @@
 package com.plankdev.jwtsecurity.jwt;
 
-import com.plankdev.jwtsecurity.dataaccess.User;
+import com.plankdev.jwtsecurity.dataaccess.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -120,13 +120,13 @@ public class TokenHelper {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        User user = (User) userDetails;
+        AppUser appUser = (AppUser) userDetails;
         final String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
         return (
                 username != null &&
                         username.equals(userDetails.getUsername()) &&
-                        !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())
+                        !isCreatedBeforeLastPasswordReset(created, appUser.getLastPasswordResetDate())
         );
     }
 

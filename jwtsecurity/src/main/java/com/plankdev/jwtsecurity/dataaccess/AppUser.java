@@ -1,7 +1,11 @@
 package com.plankdev.jwtsecurity.dataaccess;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,7 +18,10 @@ import java.util.List;
 
 //TODO: implement equals and hascode and use library
 @Entity
-public class User implements UserDetails {
+public class AppUser implements UserDetails {
+
+    private static final Log LOGGER = LogFactory.getLog(AppUser.class);
+
     @Id
     @GeneratedValue
     private long id;
@@ -40,13 +47,15 @@ public class User implements UserDetails {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private List<Authority> authorities = new ArrayList<>();
 
-    @OneToMany
+    //child side of relation
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference //prevents infinity loop
     private List<Application> applications = new ArrayList<>();
 
-    public User() {
+    public AppUser() {
     }
 
-    public User(String username, String password) {
+    public AppUser(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -102,6 +111,14 @@ public class User implements UserDetails {
         return this.authorities;
     }
 
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -152,4 +169,19 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
+    public void addApplication(Application application) {
+        if (!applications.contains(application)) {
+            applications.add(application);
+            application.setAppUser(this);
+        } else {
+            LOGGER.info("application: " + application.getName() + "already exists in appUser: " + this.username);
+        }
+    }
+
+    public void removeApplication(Application application) {
+        applications.remove(application);
+    }
+
+
 }

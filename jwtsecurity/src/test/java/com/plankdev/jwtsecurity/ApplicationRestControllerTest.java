@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 
 
@@ -14,9 +15,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 public class ApplicationRestControllerTest extends BaseRestControllerTest {
 
-    //user token needed and new token for application returned and saved in DB
+
     @Test
-    @WithMockUser(roles = "USER")
+    @WithUserDetails(value="user", userDetailsServiceBeanName="customUserDetailsService")  //CustomUserDetailsService needed because the appUser needs to be loaded from SecurityContext and not the standard spring user.
     public void shouldCreateApplicationAndReturnNewApiKey() throws Exception {
         //assemble
         //TODO: read userid from db, dont assume it is 1
@@ -35,7 +36,9 @@ public class ApplicationRestControllerTest extends BaseRestControllerTest {
         performRequest
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value(APP_NAME_EXPECTED))
+                //.andExpect(jsonPath("$.appUser.username").exists())
                 .andExpect(jsonPath("$.apiKey.apiKeyToken").exists());
     }
 

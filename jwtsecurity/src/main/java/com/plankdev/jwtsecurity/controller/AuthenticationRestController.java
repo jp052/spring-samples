@@ -1,10 +1,10 @@
 package com.plankdev.jwtsecurity.controller;
 
+import com.plankdev.jwtsecurity.dataaccess.AppUser;
 import com.plankdev.jwtsecurity.springsecurity.CustomUserDetailsService;
 import com.plankdev.jwtsecurity.jwt.JwtAuthenticationRequest;
 import com.plankdev.jwtsecurity.jwt.TokenHelper;
 import com.plankdev.jwtsecurity.jwt.UserTokenState;
-import com.plankdev.jwtsecurity.dataaccess.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,8 +58,8 @@ public class AuthenticationRestController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // token creation
-        User user = (User)authentication.getPrincipal();
-        String jws = tokenHelper.generateToken( user.getUsername());
+        AppUser appUser = (AppUser)authentication.getPrincipal();
+        String jws = tokenHelper.generateToken( appUser.getUsername());
         int expiresIn = tokenHelper.getExpiredIn();
         // Return the token
         return ResponseEntity.ok(new UserTokenState(jws, expiresIn));

@@ -1,7 +1,6 @@
 package com.plankdev.jwtsecurity;
 
-import com.plankdev.jwtsecurity.dataaccess.Application;
-import com.plankdev.jwtsecurity.dataaccess.User;
+import com.plankdev.jwtsecurity.dataaccess.AppUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration //FIXME: is @WebAppConfiguration needed?
-public class UserRestControllerTest {
+public class AppUserRestControllerTest {
 
     private MockMvc mockMvc;
 
@@ -79,11 +78,11 @@ public class UserRestControllerTest {
     @WithAnonymousUser
     public void createUserSuccessWithAnonymousUser() throws Exception {
         //assemble
-        User user = new User();
-        user.setUsername("testUser");
-        user.setPassword("password");
+        AppUser appUser = new AppUser();
+        appUser.setUsername("testUser");
+        appUser.setPassword("password");
 
-        String userJson = json(user);
+        String userJson = json(appUser);
         userJson = passwordIgnoreWorkaround(userJson);
 
         //action
@@ -110,12 +109,12 @@ public class UserRestControllerTest {
                 .andReturn();
         String userJsonAsString = getUserResult.getResponse().getContentAsString();
 
-        User user = JsonUtils.jsonStringToPojo(userJsonAsString, User.class);
-        user.setFirstName("firstName");
+        AppUser appUser = JsonUtils.jsonStringToPojo(userJsonAsString, AppUser.class);
+        appUser.setFirstName("firstName");
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/1")
                 .contentType(contentType)
-                .content(json(user)));
+                .content(json(appUser)));
 
         resultActions.andDo(print()).andExpect(status().is2xxSuccessful());
     }
@@ -123,9 +122,9 @@ public class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void deleteUserSuccessWithAdminRole() throws Exception {
-        User user = createNewUser();
+        AppUser appUser = createNewUser();
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/users/" + user.getId()))
+        ResultActions resultActions = mockMvc.perform(delete("/api/users/" + appUser.getId()))
                 .andDo(print());
 
         resultActions.andExpect(status().is2xxSuccessful());
@@ -159,12 +158,12 @@ public class UserRestControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    private User createNewUser() throws Exception {
-        User user = new User();
-        user.setUsername("testUser2");
-        user.setPassword("password");
+    private AppUser createNewUser() throws Exception {
+        AppUser appUser = new AppUser();
+        appUser.setUsername("testUser2");
+        appUser.setPassword("password");
 
-        String userJson = json(user);
+        String userJson = json(appUser);
         userJson = passwordIgnoreWorkaround(userJson);
 
         MvcResult createUserResutl = mockMvc.perform(post("/api/users")
@@ -173,7 +172,7 @@ public class UserRestControllerTest {
                 .andReturn();
 
         String userJsonAsString = createUserResutl.getResponse().getContentAsString();
-        return JsonUtils.jsonStringToPojo(userJsonAsString, User.class);
+        return JsonUtils.jsonStringToPojo(userJsonAsString, AppUser.class);
     }
 
     /**

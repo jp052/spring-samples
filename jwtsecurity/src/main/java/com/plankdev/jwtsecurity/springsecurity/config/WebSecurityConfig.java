@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    private CustomUserDetailsService jwtUserDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jwtUserDetailsService) //TODO: check if userDetailService needs to be registered, security book says no. maybe needed for pw encoder.e
+        auth.userDetailsService(customUserDetailsService) //TODO: check if userDetailService needs to be registered, security book says no. maybe needed for pw encoder.e
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated().and()
-                .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, jwtUserDetailsService), BasicAuthenticationFilter.class);
+                .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, customUserDetailsService), BasicAuthenticationFilter.class);
 
         http.csrf().disable();*/
 
@@ -76,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/console/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated().and()
-                .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, jwtUserDetailsService), BasicAuthenticationFilter.class);
+                .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, customUserDetailsService), BasicAuthenticationFilter.class);
 
 
         http.csrf().disable();

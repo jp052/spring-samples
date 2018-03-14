@@ -1,7 +1,7 @@
 package com.plankdev.jwtsecurity;
 
+import com.plankdev.jwtsecurity.dataaccess.AppUser;
 import com.plankdev.jwtsecurity.dataaccess.Authority;
-import com.plankdev.jwtsecurity.dataaccess.User;
 import com.plankdev.jwtsecurity.dataaccess.AuthorityRespository;
 import com.plankdev.jwtsecurity.dataaccess.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -24,26 +24,26 @@ public class JwtsecurityApplication {
         return (evt) -> {
 
 
-            User user = new User("user", new BCryptPasswordEncoder().encode("password"));
-            user.setEnabled(true);
-            User admin = new User("admin", new BCryptPasswordEncoder().encode("password"));
+            AppUser appUser = new AppUser("user", new BCryptPasswordEncoder().encode("password"));
+            appUser.setEnabled(true);
+            AppUser admin = new AppUser("admin", new BCryptPasswordEncoder().encode("password"));
             admin.setEnabled(true);
 
             Authority userAuthority = new Authority("ROLE_USER");
             Authority adminAuthority = new Authority("ROLE_ADMIN");
 
 
-            User savedUser = userRepository.save(user);
-            User savedAdmin = userRepository.save(admin);
+            AppUser savedAppUser = userRepository.save(appUser);
+            AppUser savedAdmin = userRepository.save(admin);
 
             Authority savedUserAuth = authorityRespository.save(userAuthority);
             Authority savedAdminAuth = authorityRespository.save(adminAuthority);
 
-            savedUserAuth.addUser(savedUser);
+            savedUserAuth.addUser(savedAppUser);
             savedAdminAuth.addUser(savedAdmin);
             savedUserAuth.addUser(savedAdmin);
 
-            userRepository.save(savedUser);
+            userRepository.save(savedAppUser);
             userRepository.save(savedAdmin);
 
 

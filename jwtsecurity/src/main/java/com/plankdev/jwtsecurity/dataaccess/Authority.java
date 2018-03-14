@@ -33,7 +33,7 @@ public class Authority implements GrantedAuthority {
 
     //inverse/child side of relation
     @ManyToMany(mappedBy = "authorities")
-    private List<User> users = new ArrayList<>();
+    private List<AppUser> appUsers = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -51,14 +51,14 @@ public class Authority implements GrantedAuthority {
         this.name = name;
     }
 
-    public void addUser(User user) {
-        if (!users.contains(user)) {
-            users.add(user);
+    public void addUser(AppUser appUser) {
+        if (!appUsers.contains(appUser)) {
+            appUsers.add(appUser);
         } else {
-            LOGGER.info("user: " + user.getUsername() + "already exists in authority: " + this.name);
+            LOGGER.info("user: " + appUser.getUsername() + "already exists in authority: " + this.name);
         }
 
-        Collection<? extends GrantedAuthority> existingAuthorities = user.getAuthorities();
+        Collection<? extends GrantedAuthority> existingAuthorities = appUser.getAuthorities();
         if (!existingAuthorities.contains(this)) {
             List<Authority> authoritiesToAdd = new ArrayList<>();
 
@@ -70,14 +70,14 @@ public class Authority implements GrantedAuthority {
             }
 
             authoritiesToAdd.add(this);
-            user.setAuthorities(authoritiesToAdd);
+            appUser.setAuthorities(authoritiesToAdd);
         } else {
-            LOGGER.info("authority: " + this.name + "already exists in user: " + user.getUsername());
+            LOGGER.info("authority: " + this.name + "already exists in user: " + appUser.getUsername());
         }
 
     }
 
-    public void removeUser(User use) {
+    public void removeUser(AppUser use) {
         /*FIXME:
         addresses.remove( address );
         address.getOwners().remove( this );*/

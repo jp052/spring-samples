@@ -1,6 +1,6 @@
 package com.plankdev.jwtsecurity.springsecurity;
 
-import com.plankdev.jwtsecurity.dataaccess.User;
+import com.plankdev.jwtsecurity.dataaccess.AppUser;
 import com.plankdev.jwtsecurity.dataaccess.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -32,11 +34,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     private AuthenticationManager authenticationManager;
 
     @Override
+    //@Transactional(readOnly=true) is Transactional needed?
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        AppUser appUser = userRepository.findByUsername(username)
                 .orElseThrow(() ->  new UsernameNotFoundException(String.format("No user found with username '%s'.", username)));
 
-        return user;
+        return appUser;
     }
 
     public void changePassword(String oldPassword, String newPassword) {
@@ -56,10 +59,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         LOGGER.debug("Changing password for user '" + username + "'");
 
-        User user = (User) loadUserByUsername(username);
+        AppUser appUser = (AppUser) loadUserByUsername(username);
 
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        appUser.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(appUser);
 
     }
 }

@@ -1,9 +1,12 @@
 package com.plankdev.jwtsecurity.dataaccess;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.util.List;
 
 @Entity
 public class Application {
@@ -12,13 +15,19 @@ public class Application {
     @GeneratedValue
     private Long id;
 
+    //name and appUser must be unique key, as on user is only allowed to have one application with the same name.
     private String name;
 
     @ManyToOne
     private ApiKey apiKey;
 
+   /* @ManyToOne
+    private List<ApiKey> apiKeyBlacklist;*/
+
+    //Parent side of relation
     @ManyToOne
-    private User user;
+    @JsonBackReference //prevents infinity loop
+    private AppUser appUser;
 
     public Long getId() {
         return id;
@@ -44,11 +53,11 @@ public class Application {
         this.apiKey = apiKey;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getAppUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }
