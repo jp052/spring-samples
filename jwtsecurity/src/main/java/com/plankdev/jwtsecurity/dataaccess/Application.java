@@ -1,6 +1,6 @@
 package com.plankdev.jwtsecurity.dataaccess;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,7 +25,7 @@ public class Application {
 
     //Parent side of relation
     @ManyToOne
-    @JsonManagedReference //prevents infinity loop
+    @JsonBackReference //prevents infinity loop
     private AppUser appUser;
 
     public Long getId() {

@@ -1,7 +1,7 @@
 package com.plankdev.jwtsecurity.dataaccess;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +48,7 @@ public class AppUser implements UserDetails {
 
     //child side of relation
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference //prevents infinity loop
+    @JsonManagedReference //prevents infinity loop
     private List<Application> applications = new ArrayList<>();
 
     public AppUser() {
