@@ -24,7 +24,7 @@ public class JsonUtils {
         this.mappingJackson2HttpMessageConverter = mappingJackson2HttpMessageConverter;
     }
 
-    public static <T>T jsonStringToPojo(String jsonString, Class<T> clazz) throws IOException {
+    public static <T> T jsonStringToPojo(String jsonString, Class<T> clazz) throws IOException {
         T model = mapperIgnoringFails.readValue(jsonString, clazz);
         return model;
     }

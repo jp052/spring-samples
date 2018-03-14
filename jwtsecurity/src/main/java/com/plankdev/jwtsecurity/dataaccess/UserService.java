@@ -28,14 +28,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AppUser findByUsername(String username ) throws UsernameNotFoundException {
-        AppUser u = userRepo.findByUsername( username )
+    public AppUser findByUsername(String username) throws UsernameNotFoundException {
+        AppUser u = userRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("username not found: " + username));
         return u;
     }
 
-    public AppUser findById(Long id ) throws AccessDeniedException {
-        AppUser u = userRepo.findOne( id );
+    public AppUser findById(Long id) throws AccessDeniedException {
+        AppUser u = userRepo.findOne(id);
         return u;
     }
 
@@ -48,7 +48,7 @@ public class UserService {
         appUser.setEnabled(true);
 
         String plainPassword = appUser.getPassword();
-        if(plainPassword == null) {
+        if (plainPassword == null) {
             throw new NullPointerException("Password needs to be set, check json ignore field");
         }
         String encodedPassword = passwordEncoder.encode(appUser.getPassword());
@@ -65,14 +65,14 @@ public class UserService {
         return createdUserOpt;
     }
 
-    public  Optional<AppUser> updateUser(AppUser appUser) {
+    public Optional<AppUser> updateUser(AppUser appUser) {
         AppUser oldAppUser = userRepo.findOne(appUser.getId());
         Optional<AppUser> updatedUser = Optional.of(userRepo.save(appUser));
         return updatedUser;
     }
 
     public void deleteUser(Long userId) {
-        if(userId == null) {
+        if (userId == null) {
             throw new NullPointerException("id needs to be set for user");
         }
 

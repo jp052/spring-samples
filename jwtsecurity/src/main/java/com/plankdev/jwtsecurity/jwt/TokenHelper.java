@@ -71,7 +71,7 @@ public class TokenHelper {
             refreshedToken = Jwts.builder()
                     .setClaims(claims)
                     .setExpiration(generateExpirationDate())
-                    .signWith( SIGNATURE_ALGORITHM, SECRET )
+                    .signWith(SIGNATURE_ALGORITHM, SECRET)
                     .compact();
         } catch (Exception e) {
             refreshedToken = null;
@@ -82,12 +82,12 @@ public class TokenHelper {
     public String generateToken(String username) {
         String audience = generateAudience();
         return Jwts.builder()
-                .setIssuer( APP_NAME )
+                .setIssuer(APP_NAME)
                 .setSubject(username)
                 .setAudience(audience)
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
-                .signWith( SIGNATURE_ALGORITHM, SECRET )
+                .signWith(SIGNATURE_ALGORITHM, SECRET)
                 .compact();
     }
 
@@ -111,7 +111,7 @@ public class TokenHelper {
     }
 
     private Date generateExpirationDate() {
-        long expiresIn =  EXPIRES_IN;
+        long expiresIn = EXPIRES_IN;
         return new Date(new Date().getTime() + expiresIn * 1000);
     }
 
@@ -134,20 +134,20 @@ public class TokenHelper {
         return (lastPasswordReset != null && created.before(lastPasswordReset));
     }
 
-    public String getToken( HttpServletRequest request ) {
+    public String getToken(HttpServletRequest request) {
         /**
          *  Getting the token from Authentication header
          *  e.g Bearer your_token
          */
-        String authHeader = getAuthHeaderFromHeader( request );
-        if ( authHeader != null && authHeader.startsWith("Bearer ")) {
+        String authHeader = getAuthHeaderFromHeader(request);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
 
         return null;
     }
 
-    public String getAuthHeaderFromHeader( HttpServletRequest request ) {
+    public String getAuthHeaderFromHeader(HttpServletRequest request) {
         return request.getHeader(AUTH_HEADER);
     }
 }

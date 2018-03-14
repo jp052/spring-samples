@@ -27,8 +27,8 @@ import java.util.Arrays;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
@@ -177,6 +177,7 @@ public class AppUserRestControllerTest {
 
     /**
      * The password should not be deserialized in the real application, but in tests deserialization is needed.
+     *
      * @param userJson
      * @return
      */

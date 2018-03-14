@@ -2,22 +2,20 @@ package com.plankdev.jwtsecurity;
 
 import com.plankdev.jwtsecurity.dataaccess.Application;
 import org.junit.Test;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationRestControllerTest extends BaseRestControllerTest {
 
 
     @Test
-    @WithUserDetails(value="user", userDetailsServiceBeanName="customUserDetailsService")  //CustomUserDetailsService needed because the appUser needs to be loaded from SecurityContext and not the standard spring user.
+    @WithUserDetails(value = "user", userDetailsServiceBeanName = "customUserDetailsService")
+    //CustomUserDetailsService needed because the appUser needs to be loaded from SecurityContext and not the standard spring user.
     public void shouldCreateApplicationAndReturnNewApiKey() throws Exception {
         //assemble
         //TODO: read userid from db, dont assume it is 1

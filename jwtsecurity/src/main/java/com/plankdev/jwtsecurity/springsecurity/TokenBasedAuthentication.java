@@ -8,8 +8,8 @@ public class TokenBasedAuthentication extends AbstractAuthenticationToken {
     private String token;
     private final UserDetails userDetails;
 
-    public TokenBasedAuthentication( UserDetails userDetails) {
-        super( userDetails.getAuthorities() );
+    public TokenBasedAuthentication(UserDetails userDetails) {
+        super(userDetails.getAuthorities());
         this.userDetails = userDetails;
     }
 
@@ -17,7 +17,7 @@ public class TokenBasedAuthentication extends AbstractAuthenticationToken {
         return token;
     }
 
-    public void setToken( String token ) {
+    public void setToken(String token) {
         this.token = token;
     }
 

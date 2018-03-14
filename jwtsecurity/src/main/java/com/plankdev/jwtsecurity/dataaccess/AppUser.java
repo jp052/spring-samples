@@ -1,11 +1,10 @@
 package com.plankdev.jwtsecurity.dataaccess;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -49,7 +48,7 @@ public class AppUser implements UserDetails {
 
     //child side of relation
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference //prevents infinity loop
+    @JsonBackReference //prevents infinity loop
     private List<Application> applications = new ArrayList<>();
 
     public AppUser() {
@@ -82,7 +81,7 @@ public class AppUser implements UserDetails {
 
     public void setPassword(String password) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        this.setLastPasswordResetDate( now );
+        this.setLastPasswordResetDate(now);
         this.password = password;
     }
 
