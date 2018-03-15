@@ -1,9 +1,9 @@
 package com.plankdev.jwtsecurity;
 
-import com.plankdev.jwtsecurity.dataaccess.AppUser;
-import com.plankdev.jwtsecurity.dataaccess.Authority;
-import com.plankdev.jwtsecurity.dataaccess.AuthorityRespository;
-import com.plankdev.jwtsecurity.dataaccess.UserRepository;
+import com.plankdev.jwtsecurity.security.dataaccess.AppUser;
+import com.plankdev.jwtsecurity.security.dataaccess.Authority;
+import com.plankdev.jwtsecurity.security.dataaccess.AuthorityRespository;
+import com.plankdev.jwtsecurity.security.dataaccess.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

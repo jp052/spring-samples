@@ -1,6 +1,6 @@
 package com.plankdev.jwtsecurity.api;
 
-import com.plankdev.jwtsecurity.dataaccess.Application;
+import com.plankdev.jwtsecurity.security.dataaccess.Application;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
