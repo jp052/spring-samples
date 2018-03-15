@@ -1,5 +1,6 @@
 package com.plankdev.jwtsecurity.api;
 
+import com.plankdev.jwtsecurity.restcommons.Model;
 import com.plankdev.jwtsecurity.security.dataaccess.Application;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Vehicle {
+public class Vehicle implements Model {
 
     @Id
     @GeneratedValue
@@ -18,4 +19,29 @@ public class Vehicle {
 
     @ManyToOne
     private Application application;
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
 }

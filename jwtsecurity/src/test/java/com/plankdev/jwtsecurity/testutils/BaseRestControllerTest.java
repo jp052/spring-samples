@@ -1,4 +1,4 @@
-package com.plankdev.jwtsecurity.security.controller;
+package com.plankdev.jwtsecurity.testutils;
 
 import com.plankdev.jwtsecurity.testutils.JsonUtils;
 import org.junit.Before;

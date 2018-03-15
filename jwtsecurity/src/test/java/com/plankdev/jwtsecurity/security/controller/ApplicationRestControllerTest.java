@@ -1,6 +1,7 @@
 package com.plankdev.jwtsecurity.security.controller;
 
 import com.plankdev.jwtsecurity.security.dataaccess.Application;
+import com.plankdev.jwtsecurity.testutils.BaseRestControllerTest;
 import org.junit.Test;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
