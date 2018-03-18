@@ -2,6 +2,7 @@ package com.plankdev.jwtsecurity.security.springsecurity;
 
 import com.plankdev.jwtsecurity.security.dataaccess.AppUser;
 import com.plankdev.jwtsecurity.security.dataaccess.UserRepository;
+import com.plankdev.jwtsecurity.security.exception.UserNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     //@Transactional(readOnly=true) is Transactional needed?
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UserNotFoundException {
         AppUser appUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("No user found with username '%s'.", username)));
+                .orElseThrow(() -> new UserNotFoundException(username));
 
         return appUser;
     }
