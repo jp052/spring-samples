@@ -17,7 +17,6 @@ public class VehicleService {
     }
 
     public Optional<Vehicle> createVehicle(Vehicle vehicle, AppUser appUser) {
-    	//vehicle.se
         Optional<Vehicle> vehicleOptional = Optional.of(vehicleRepo.save(vehicle));
         return vehicleOptional;
     }

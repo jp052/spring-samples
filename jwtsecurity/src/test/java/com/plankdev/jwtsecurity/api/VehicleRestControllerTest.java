@@ -34,7 +34,7 @@ public class VehicleRestControllerTest extends BaseRestControllerTest {
         String vehicleJson = jsonUtils.pojoToJson(vehicle);
 
         //action
-        ResultActions performRequest = mockMvc.perform(post("/api/v1/myApp1/vehicles")
+        ResultActions performRequest = mockMvc.perform(post("/api/v1/vehicles")
                 .contentType(contentType)
                 .content(vehicleJson))
                 .andDo(print());
