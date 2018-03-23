@@ -14,18 +14,20 @@ import java.util.Date;
 @Component
 public class TokenHelper {
     @Value("${app.name}")
-    private String APP_NAME;
+    private String appName;
 
     @Value("${jwt.secret}")
-    public String SECRET;
+    private String secret;
 
     @Value("${jwt.expires_in}")
-    private int EXPIRES_IN;
+    private int expiresIn;
 
     @Value("${jwt.header}")
-    private String AUTH_HEADER;
+    private String authHeader;
 
     static final String AUDIENCE_UNKNOWN = "unknown";
+    
+    private final String API_APP_KEY = "apiapp";
 
     private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
@@ -36,6 +38,7 @@ public class TokenHelper {
             username = claims.getSubject();
         } catch (Exception e) {
             username = null;
+            e.printStackTrace();
         }
         return username;
     }
@@ -61,6 +64,17 @@ public class TokenHelper {
         }
         return audience;
     }
+    
+    public String getAppnameFromToken(String token) {
+    	String apiApp;
+        try {
+            final Claims claims = this.getAllClaimsFromToken(token);
+            apiApp = claims.get(API_APP_KEY, String.class);
+        } catch (Exception e) {
+            apiApp = null;
+        }
+        return apiApp;
+	}
 
     public String refreshToken(String token) {
         String refreshedToken;
@@ -71,7 +85,7 @@ public class TokenHelper {
             refreshedToken = Jwts.builder()
                     .setClaims(claims)
                     .setExpiration(generateExpirationDate())
-                    .signWith(SIGNATURE_ALGORITHM, SECRET)
+                    .signWith(SIGNATURE_ALGORITHM, secret)
                     .compact();
         } catch (Exception e) {
             refreshedToken = null;
@@ -81,13 +95,28 @@ public class TokenHelper {
 
     public String generateToken(String username) {
         String audience = generateAudience();
-        return Jwts.builder()
-                .setIssuer(APP_NAME)
+        Date generateExpirationDate = generateExpirationDate();
+		return Jwts.builder()
+                .setIssuer(appName)
                 .setSubject(username)
-                .setAudience(audience)
+                .setAudience(audience)              
                 .setIssuedAt(new Date())
-                .setExpiration(generateExpirationDate())
-                .signWith(SIGNATURE_ALGORITHM, SECRET)
+                .setExpiration(generateExpirationDate)
+                .signWith(SIGNATURE_ALGORITHM, secret)
+                .compact();
+    }
+    
+    public String generateToken(String username, String apiapp) {
+        String audience = generateAudience();
+        Date generateExpirationDate = generateExpirationDate();
+		return Jwts.builder()
+                .setIssuer(appName)
+                .setSubject(username)
+                .claim(API_APP_KEY, apiapp)
+                .setAudience(audience)              
+                .setIssuedAt(new Date())
+                .setExpiration(generateExpirationDate)
+                .signWith(SIGNATURE_ALGORITHM, secret)
                 .compact();
     }
 
@@ -101,22 +130,23 @@ public class TokenHelper {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(SECRET)
+                    .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
             claims = null;
+            e.printStackTrace();
         }
         return claims;
     }
 
     private Date generateExpirationDate() {
-        long expiresIn = EXPIRES_IN;
-        return new Date(new Date().getTime() + expiresIn * 1000);
+      
+        return new Date(new Date().getTime() + (long) expiresIn * 1000);
     }
 
     public int getExpiredIn() {
-        return EXPIRES_IN;
+        return expiresIn;
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
@@ -148,6 +178,26 @@ public class TokenHelper {
     }
 
     public String getAuthHeaderFromHeader(HttpServletRequest request) {
-        return request.getHeader(AUTH_HEADER);
+        return request.getHeader(authHeader);
     }
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+	
+	public void setExpiresIn(int expiresInSeconds) {
+		this.expiresIn = expiresInSeconds;
+	}
+
+	public void setAuthHeader(String authHeader) {
+		this.authHeader = authHeader;
+	}
+   
+    
+    
+
 }

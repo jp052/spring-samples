@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -26,13 +27,12 @@ public class ApplicationService {
     /*
     Lazy init problem: der current user wird aus CustomUserDetailService geladen. Wenn später darauf zugegriffen werden soll, ist die session schon geschlossen.
      */
-    public Optional<Application> createApplication(Application application) {
-        //TODO: null handling
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AppUser userDetail = (AppUser)authentication.getPrincipal();
-        String jwtToken = tokenHelper.generateToken(userDetail.getUsername());
+    public Optional<Application> createApplication(Application application, AppUser appUser) {
+        //TODO: null handling      
+        //AppUser appUser = (AppUser)user.getName();
+        String jwtToken = tokenHelper.generateToken(appUser.getUsername());
 
-        AppUser currentUserInSession = userRepo.findOne(userDetail.getId());
+        AppUser currentUserInSession = userRepo.findOne(appUser.getId());
 
         ApiKey apiKey = new ApiKey();
         apiKey.setApiKeyToken(jwtToken);
@@ -40,7 +40,7 @@ public class ApplicationService {
 
         ApiKey createdApiKey = apiKeyRepo.save(apiKey);
         application.setApiKey(createdApiKey);
-        currentUserInSession.addApplication(application);
+        currentUserInSession.addApplication(application);      
 
         //userRepo.save(currentUserInSession);
         Optional<Application> applicationOpt = Optional.of(applicationRepo.save(application));

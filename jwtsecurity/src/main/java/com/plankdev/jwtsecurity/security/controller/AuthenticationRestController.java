@@ -1,6 +1,7 @@
 package com.plankdev.jwtsecurity.security.controller;
 
 import com.plankdev.jwtsecurity.security.dataaccess.AppUser;
+import com.plankdev.jwtsecurity.security.dataaccess.UserService;
 import com.plankdev.jwtsecurity.security.springsecurity.CustomUserDetailsService;
 import com.plankdev.jwtsecurity.security.jwt.JwtAuthenticationRequest;
 import com.plankdev.jwtsecurity.security.jwt.TokenHelper;
@@ -34,11 +35,11 @@ public class AuthenticationRestController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private UserService userService;
 
     @GetMapping(value= "/hello")
     public String hello() {
-        return "{\"hello\":\"spring\"}";
+        return "{\"hello\":\"spring-reload2\"}";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -93,7 +94,7 @@ public class AuthenticationRestController {
     @RequestMapping(value = "/change-password", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
-        userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
+        userService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
         Map<String, String> result = new HashMap<>();
         result.put( "result", "success" );
         return ResponseEntity.accepted().body(result);

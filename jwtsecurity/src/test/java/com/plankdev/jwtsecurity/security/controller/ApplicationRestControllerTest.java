@@ -18,15 +18,14 @@ public class ApplicationRestControllerTest extends BaseRestControllerTest {
     @WithUserDetails(value = "user", userDetailsServiceBeanName = "customUserDetailsService")
     //CustomUserDetailsService needed because the appUser needs to be loaded from SecurityContext and not the standard spring user.
     public void shouldCreateApplicationAndReturnNewApiKey() throws Exception {
-        //assemble
-        //TODO: read userid from db, dont assume it is 1
+        //assemble        
         final String APP_NAME_EXPECTED = "myApp1";
         Application app = new Application();
         app.setName(APP_NAME_EXPECTED);
         String applicationJson = jsonUtils.pojoToJson(app);
 
         //action
-        ResultActions performRequest = mockMvc.perform(post("/api/users/1/applications")
+        ResultActions performRequest = mockMvc.perform(post("/api/applications")
                 .contentType(contentType)
                 .content(applicationJson))
                 .andDo(print());

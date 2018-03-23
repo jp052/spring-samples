@@ -1,7 +1,10 @@
 package com.plankdev.jwtsecurity.security.controller;
 
+import com.plankdev.jwtsecurity.security.dataaccess.AppUser;
 import com.plankdev.jwtsecurity.security.dataaccess.Application;
 import com.plankdev.jwtsecurity.security.dataaccess.ApplicationService;
+import com.plankdev.jwtsecurity.security.dataaccess.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,22 +13,26 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
-@RequestMapping( value = "/api/users/{userId}/applications", produces = MediaType.APPLICATION_JSON_VALUE )
+@RequestMapping( value = "/api/applications", produces = MediaType.APPLICATION_JSON_VALUE )
 public class ApplicationRestController {
     private ApplicationService applicationService;
+    private UserService userService;
 
     @Autowired
-    public ApplicationRestController(ApplicationService applicationService) {
+    public ApplicationRestController(ApplicationService applicationService, UserService userService) {
         this.applicationService = applicationService;
+        this.userService = userService;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createApplication(@PathVariable Long userId, @RequestBody Application application) {
-        Optional<Application> createdApplicationOpt = applicationService.createApplication(application);
+    public ResponseEntity<?> createApplication(Principal principal, @RequestBody Application application) {
+    	AppUser appUser = userService.findByUsername(principal.getName());
+        Optional<Application> createdApplicationOpt = applicationService.createApplication(application, appUser);
         ResponseEntity<?> response = buildApplicationResponseEntity(createdApplicationOpt);
         return response;
     }

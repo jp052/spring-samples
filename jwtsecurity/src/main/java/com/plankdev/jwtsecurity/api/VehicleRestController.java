@@ -1,6 +1,9 @@
 package com.plankdev.jwtsecurity.api;
 
 import com.plankdev.jwtsecurity.restcommons.ResponseBuilder;
+import com.plankdev.jwtsecurity.security.dataaccess.AppUser;
+import com.plankdev.jwtsecurity.security.dataaccess.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,15 +19,18 @@ import java.util.Optional;
 public class VehicleRestController {
 
     private VehicleService vehicleService;
+    private UserService userService;
 
     @Autowired
-    public VehicleRestController(VehicleService vehicleService) {
+    public VehicleRestController(VehicleService vehicleService, UserService userService) {
         this.vehicleService = vehicleService;
+        this.userService = userService;
     }
 
     @PostMapping
     public ResponseEntity<?> createVehicle(Principal principal, @RequestBody Vehicle vehicle) {
-        Optional<Vehicle> createdVehicle = vehicleService.createVehicle(vehicle);
+    	AppUser appUser = userService.findByUsername(principal.getName());
+        Optional<Vehicle> createdVehicle = vehicleService.createVehicle(vehicle, appUser);
         ResponseEntity<?> response = ResponseBuilder.buildNewModelResponseEntity(createdVehicle);
 
         return response;
