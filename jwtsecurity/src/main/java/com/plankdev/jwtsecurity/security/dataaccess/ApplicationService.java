@@ -1,5 +1,6 @@
 package com.plankdev.jwtsecurity.security.dataaccess;
 
+import com.plankdev.jwtsecurity.security.exception.AppNotFoundException;
 import com.plankdev.jwtsecurity.security.jwt.TokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,7 +31,12 @@ public class ApplicationService {
     public Optional<Application> createApplication(Application application, AppUser appUser) {
         //TODO: null handling      
         //AppUser appUser = (AppUser)user.getName();
-        String jwtToken = tokenHelper.generateToken(appUser.getUsername());
+    	
+    	String appName = application.getName();
+    	if(appName == null) {
+    		throw new AppNotFoundException("applicaiton.name needs to be set");
+    	}
+        String jwtToken = tokenHelper.generateToken(appUser.getUsername(), appName);
 
         AppUser currentUserInSession = userRepo.findOne(appUser.getId());
 

@@ -1,5 +1,6 @@
 package com.plankdev.jwtsecurity.security.error;
 
+import com.plankdev.jwtsecurity.security.exception.AppNotFoundException;
 import com.plankdev.jwtsecurity.security.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class RestControllerAdvice {
      * @return
      */
     @ResponseBody
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler(value = {UserNotFoundException.class, AppNotFoundException.class}) //TODO: add parent class to exceptions like ApiNotFoundExeption
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ResponseEntity<?> userNotFoundExceptionHandler(UserNotFoundException ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());

@@ -1,5 +1,6 @@
 package com.plankdev.jwtsecurity.security.springsecurity;
 
+import com.plankdev.jwtsecurity.security.dataaccess.Application;
 import com.plankdev.jwtsecurity.security.jwt.TokenHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final Log logger = LogFactory.getLog(this.getClass());
@@ -42,9 +44,19 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if (username != null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (tokenHelper.validateToken(authToken, userDetails)) {
+                	String appName = tokenHelper.getAppnameFromToken(authToken);
+                	
                     // create authentication
                     TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
                     authentication.setToken(authToken);
+                    
+                    //set appName, if available (only available if called with applicaiton token)
+                    if(appName != null) {
+                    	HashMap<String, Object> extraTokenInfo = new HashMap<String, Object>();
+                        extraTokenInfo.put(Application.APP_NAME_KEY, appName);
+                        authentication.setDetails(extraTokenInfo);
+                	}                                    
+                    
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }

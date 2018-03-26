@@ -10,7 +10,9 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Application {
 
-    @Id
+    public static final String APP_NAME_KEY = "appname";
+
+	@Id
     @GeneratedValue
     private Long id;
 
