@@ -11,7 +11,7 @@ public class ApiKey {
     @GeneratedValue
     private Long id;
 
-    private String apiKeyToken;
+    private String jwtToken;
 
     private boolean active;
 
@@ -24,12 +24,12 @@ public class ApiKey {
         this.id = id;
     }
 
-    public String getApiKeyToken() {
-        return apiKeyToken;
+    public String getJwtToken() {
+        return jwtToken;
     }
 
-    public void setApiKeyToken(String apiKeyToken) {
-        this.apiKeyToken = apiKeyToken;
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 
     public boolean isActive() {

@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
 
-    public Optional<ApiKey> findByApiKeyToken(String apiKeyToken);
+    public Optional<ApiKey> findByJwtToken(String jwtToken);
 }

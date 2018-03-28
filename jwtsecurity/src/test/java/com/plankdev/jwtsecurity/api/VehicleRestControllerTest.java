@@ -29,13 +29,13 @@ public class VehicleRestControllerTest extends BaseRestControllerTest {
         String VEHICLE_NAME_EXPECTED = "car1";
         Vehicle vehicle = new Vehicle();
         vehicle.setName(VEHICLE_NAME_EXPECTED);
-        vehicle.setApplication(app);
 
         String vehicleJson = jsonUtils.pojoToJson(vehicle);
 
         //action
         ResultActions performRequest = mockMvc.perform(post("/api/v1/vehicles")
-                .contentType(contentType)
+        		.header("Authorization", "Bearer " + app.getApiKey().getJwtToken())
+                .contentType(contentType)          
                 .content(vehicleJson))
                 .andDo(print());
 

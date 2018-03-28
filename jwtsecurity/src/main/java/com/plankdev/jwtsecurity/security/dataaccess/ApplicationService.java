@@ -41,7 +41,7 @@ public class ApplicationService {
         AppUser currentUserInSession = userRepo.findOne(appUser.getId());
 
         ApiKey apiKey = new ApiKey();
-        apiKey.setApiKeyToken(jwtToken);
+        apiKey.setJwtToken(jwtToken);
         apiKey.setActive(true);
 
         ApiKey createdApiKey = apiKeyRepo.save(apiKey);

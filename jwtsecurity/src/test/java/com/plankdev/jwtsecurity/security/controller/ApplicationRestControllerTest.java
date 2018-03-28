@@ -37,7 +37,7 @@ public class ApplicationRestControllerTest extends BaseRestControllerTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value(APP_NAME_EXPECTED))
                 //.andExpect(jsonPath("$.appUser.username").exists())
-                .andExpect(jsonPath("$.apiKey.apiKeyToken").exists());
+                .andExpect(jsonPath("$.apiKey.jwtToken").exists());
     }
 
 
